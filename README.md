@@ -1,6 +1,7 @@
 Context
 ========
-We are building a method that will allow the providers connected to Inch to handle their interventions in their calendar. We already have classes for the intervention and we need to build a method that will allow us to calculate all the available windows.
+We are building a method that will allow the providers *connected* to Inch to handle their interventions in their calendar. 
+We already have classes for the intervention and we need to build a method that will allow us to calculate all the available windows.
 
 Classes
 ========
@@ -22,9 +23,12 @@ Evaluation Criteria
 ==========
 We will particularly analyze the following criterias for the evaluation :
 * The readability of the code (can we understand what you did easily)
-* Tests !!!
-* Performance
-* The awesomeness of what you do
+* The maintenability of the code
+
+Bonus :
+* Tests (mocha, jest, ...)
+* Performance (can I run the algorithm for 20 years ?)
+* The awesomeness of what you do (surprise us)
 
 Details
 =======
