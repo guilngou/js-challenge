@@ -7,7 +7,7 @@
 // Feel free to use your own implementation / different lists
 var eventList = [];
 
-var Event = function(opening, recurring, startDate, endDate){
+var Event = function(opening, recurring, startDate, endDate) {
   this.opening = opening;
   this.recurring = recurring;
   this.startDate = startDate;
@@ -17,10 +17,9 @@ var Event = function(opening, recurring, startDate, endDate){
   eventList.push(this);
 };
 
-
 // This method should return the availabilities of the company
 // Only "available" events should be displayed
 // You can use slots, or return the availabilities the way you want
-Event.prototype.availabilities = function(fromDate, toDate){
-  return //Something awesome;
+Event.prototype.availabilities = function(fromDate, toDate) {
+  return; //Something awesome;
 };
