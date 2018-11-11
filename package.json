@@ -20,7 +20,6 @@
     "jest": "^23.6.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "moment-range": "^4.0.1",
-    "moment-recur": "^1.0.7"
+    "moment-range": "^4.0.1"
   }
 }
