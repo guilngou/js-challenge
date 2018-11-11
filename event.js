@@ -1,3 +1,6 @@
+const Moment = require("moment");
+const MomentRange = require("moment-range");
+const moment = MomentRange.extendMoment(Moment);
 // This is the Event class
 // An event is either opening (available) or busy (intervention)
 // An opening event can be recurring (it means it repeats itself on the same day, same hours the next weeks)
@@ -6,15 +9,24 @@
 // The eventlist is used to push all the events in a global variable
 // Feel free to use your own implementation / different lists
 const eventList = [];
+const openingRanges = [];
+const busyRanges = [];
 
-const Event = function(opening, recurring, startDate, endDate) {
+const Event = function(opening, recurring, startDate, endDate, range) {
   this.opening = opening;
   this.recurring = recurring;
   this.startDate = startDate;
   this.endDate = endDate;
+  this.range = range;
 
   // when an event is created, push it to the class variable
   eventList.push(this);
+
+  if (opening) {
+    openingRanges.push(range);
+  } else {
+    busyRanges.push(range);
+  }
 };
 
 // This method should return the availabilities of the company
