@@ -35,7 +35,8 @@ new Event(false, false, startDate, endDate, range);
 // 10AM, to 15th of July, 10AM
 const fromDate = moment(new Date(2018, 6, 3, 10, 0));
 const toDate = moment(new Date(2018, 6, 15, 10, 0));
-Event.prototype.availabilities(fromDate, toDate);
+const customerRange = moment.range(fromDate, toDate);
+Event.prototype.availabilities(fromDate, toDate, customerRange);
 
 /*
  * Answer should be : 

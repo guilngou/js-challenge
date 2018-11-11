@@ -11,7 +11,7 @@ const flatten = lodash.flatten;
 // The eventlist is used to push all the events in a global variable
 // Feel free to use your own implementation / different lists
 const eventList = [];
-const openingRanges = [];
+const openingEventList = [];
 const busyRanges = [];
 let availableRanges = [];
 
@@ -22,11 +22,14 @@ const Event = function(opening, recurring, startDate, endDate, range) {
   this.endDate = endDate;
   this.range = range;
 
+  //TODO : check event is valid
+  //TODO : check date is valid
+
   // when an event is created, push it to the class variable
   eventList.push(this);
 
   if (opening) {
-    openingRanges.push(range);
+    openingEventList.push(this);
   } else {
     busyRanges.push(range);
   }
@@ -35,16 +38,93 @@ const Event = function(opening, recurring, startDate, endDate, range) {
 // This method should return the availabilities of the company
 // Only "available" events should be displayed
 // You can use slots, or return the availabilities the way you want
-Event.prototype.availabilities = function(fromDate, toDate) {
-  console.log("availableRanges : ");
-  console.log(subtractRanges(openingRanges, busyRanges));
-  return; //Something awesome;
+Event.prototype.availabilities = function(fromDate, toDate, customerRange) {
+  const openingRangesInCustomerRange = [];
+  for (const event of openingEventList) {
+    // Evenements non récurrents //////////////////////////////
+    if (event.range.overlaps(customerRange) && !event.recurring) {
+      openingRangesInCustomerRange.push(event.range.intersect(customerRange));
+    }
+    ///////////////////////////////////////////////////////////
+    // Evenements récurrents //////////////////////////////////
+    if (event.recurring && event.startDate.isBefore(toDate)) {
+      while (event.startDate.isBefore(toDate)) {
+        if (event.range.overlaps(customerRange)) {
+          openingRangesInCustomerRange.push(
+            event.range.intersect(customerRange)
+          );
+        }
+        event.startDate = event.startDate.add(7, "days");
+        event.endDate = event.endDate.add(7, "days");
+        event.range = moment.range(event.startDate, event.endDate);
+      }
+    }
+    ///////////////////////////////////////////////////////////
+  }
+  //console.log("openingRangesInCustomerRange : ");
+  //console.log(openingRangesInCustomerRange);
+  //console.log("availableRanges : ");
+  availableRanges = subtractRanges(openingRangesInCustomerRange, busyRanges);
+  //console.log(availableRanges);
+
+  const availableRangesSorted = availableRanges.sort(
+    (a, b) => a.start - b.start
+  );
+  //console.log(availableRangesSorted);
+
+  let output = "";
+  const startDate = moment(new Date(2000, 1, 1, 0, 0));
+  const endDate = moment(new Date(2000, 1, 1, 0, 30));
+  const thirtyMinutesRange = moment.range(startDate, endDate);
+  let currentDate = moment("2000-01-01");
+  for (const range of availableRangesSorted) {
+    const slots = Array.from(
+      range.byRange(thirtyMinutesRange, { excludeEnd: true })
+    );
+    console.log(range);
+    slots.map(m => {
+      if (!currentDate.isSame(m, "day")) {
+        const day = nth(parseInt(m.format("D")));
+        currentDate = m;
+        if (!!output) {
+          output = output.substring(0, output.length - 2);
+          output += `\nI'm available on ${m.format("MMMM D")}${day} ${m.format(
+            "HH:mm"
+          )}, `;
+        } else {
+          output += `I'm available on ${m.format("MMMM D")}${day} ${m.format(
+            "HH:mm"
+          )}, `;
+        }
+      } else {
+        output += m.format("HH:mm") + ", ";
+      }
+    });
+  }
+  output = output.substring(0, output.length - 2);
+  output += "\nI'm not available any other time ! ";
+  console.log("output :");
+  console.log(output);
 };
 
-const subtractRanges = (open, busy) => {
+const nth = d => {
+  if (d > 3 && d < 21) return "th";
+  switch (d % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+};
+
+const subtractRanges = (sourceRange, otherRanges) => {
   return flatten(
-    open.map(s => {
-      return flatten(busy).reduce(
+    sourceRange.map(s => {
+      return flatten(otherRanges).reduce(
         (remaining, o) => {
           return flatten(remaining.map(r => r.subtract(o)));
         },
