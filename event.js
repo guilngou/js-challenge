@@ -5,9 +5,9 @@
 
 // The eventlist is used to push all the events in a global variable
 // Feel free to use your own implementation / different lists
-var eventList = [];
+const eventList = [];
 
-var Event = function(opening, recurring, startDate, endDate) {
+const Event = function(opening, recurring, startDate, endDate) {
   this.opening = opening;
   this.recurring = recurring;
   this.startDate = startDate;
@@ -23,3 +23,5 @@ var Event = function(opening, recurring, startDate, endDate) {
 Event.prototype.availabilities = function(fromDate, toDate) {
   return; //Something awesome;
 };
+
+module.exports = { Event, eventList };

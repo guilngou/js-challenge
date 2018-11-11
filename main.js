@@ -1,14 +1,15 @@
 // This file is the main file, it contains a mock declaration of all the events of the company
+const { Event, eventList } = require("./event");
 
 // AVAILABILITIES //
 // The company is available every monday, from 10:30 to 14:00, beginning the 2nd of July
-var startDate = new Date(2018, 6, 2, 10, 30);
-var endDate = new Date(2018, 6, 2, 14, 00);
+let startDate = new Date(2018, 6, 2, 10, 30);
+let endDate = new Date(2018, 6, 2, 14, 00);
 new Event(true, true, startDate, endDate);
 
 // The company is available on tuesday 3rd of july, from 11:30 to 16:00
-var startDate = new Date(2018, 6, 3, 11, 30);
-var endDate = new Date(2018, 6, 3, 16, 00);
+startDate = new Date(2018, 6, 3, 11, 30);
+endDate = new Date(2018, 6, 3, 16, 00);
 new Event(true, false, startDate, endDate);
 
 // INTERVENTIONS //
@@ -23,8 +24,8 @@ endDate = new Date(2018, 6, 3, 14, 00);
 new Event(false, false, startDate, endDate);
 
 // MAIN RESPONSE //
-var fromDate = new Date(2018, 6, 3, 10, 00);
-var toDate = new Date(2018, 6, 15, 10, 00);
+const fromDate = new Date(2018, 6, 3, 10, 00);
+const toDate = new Date(2018, 6, 15, 10, 00);
 Event.prototype.availabilities(fromDate, toDate);
 
 /*
