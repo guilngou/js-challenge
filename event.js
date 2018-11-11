@@ -24,4 +24,6 @@ Event.prototype.availabilities = function(fromDate, toDate) {
   return; //Something awesome;
 };
 
-module.exports = { Event, eventList };
+const simpleSum = (a, b) => a + b;
+
+module.exports = { simpleSum, Event, eventList };
