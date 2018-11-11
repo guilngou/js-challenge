@@ -19,8 +19,8 @@ endDate = new Date(2018, 6, 3, 13, 00);
 new Event(false, false, startDate, endDate);
 
 // The company has an intervention scheduled tuesday 9th of july, from 13:30 to 14:00
-startDate = new Date(2018, 6, 3, 13, 30);
-endDate = new Date(2018, 6, 3, 14, 00);
+startDate = new Date(2018, 6, 9, 13, 30);
+endDate = new Date(2018, 6, 9, 14, 00);
 new Event(false, false, startDate, endDate);
 
 // MAIN RESPONSE //
