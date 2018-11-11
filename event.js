@@ -81,20 +81,20 @@ Event.prototype.availabilities = function(fromDate, toDate, customerRange) {
     const slots = Array.from(
       range.byRange(thirtyMinutesRange, { excludeEnd: true })
     );
-    console.log(range);
+    //console.log(range);
     slots.map(m => {
       if (!currentDate.isSame(m, "day")) {
         const day = nth(parseInt(m.format("D")));
         currentDate = m;
         if (!!output) {
           output = output.substring(0, output.length - 2);
-          output += `\nI'm available on ${m.format("MMMM D")}${day} ${m.format(
-            "HH:mm"
-          )}, `;
+          output += `\nI'm available on ${m.format(
+            "MMMM D"
+          )}${day}, at ${m.format("HH:mm")}, `;
         } else {
-          output += `I'm available on ${m.format("MMMM D")}${day} ${m.format(
-            "HH:mm"
-          )}, `;
+          output += `I'm available on ${m.format(
+            "MMMM D"
+          )}${day}, at ${m.format("HH:mm")}, `;
         }
       } else {
         output += m.format("HH:mm") + ", ";
