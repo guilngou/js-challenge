@@ -1,4 +1,10 @@
-const { Event, eventList, eventValidator, nth } = require("./event");
+const {
+  Event,
+  eventList,
+  eventValidator,
+  nth,
+  substractRanges
+} = require("./event");
 const Moment = require("moment");
 const MomentRange = require("moment-range");
 const moment = MomentRange.extendMoment(Moment);
@@ -66,4 +72,18 @@ describe("Unit tests", () => {
       }
     }
   });
+  test("substractRanges", () => {
+    let startDate = moment(new Date(2018, 6, 2, 10, 0));
+    let endDate = moment(new Date(2018, 6, 2, 14, 0));
+    let range1 = moment.range(startDate, endDate);
+    startDate = moment(new Date(2018, 6, 2, 10, 0));
+    endDate = moment(new Date(2018, 6, 2, 11, 0));
+    let range2 = moment.range(startDate, endDate);
+    startDate = moment(new Date(2018, 6, 2, 11, 0));
+    endDate = moment(new Date(2018, 6, 2, 14, 0));
+    let range3 = moment.range(startDate, endDate);
+    let result = substractRanges(range1, range2);
+    expect(result[0].isSame(range3)).toBeTruthy();
+  });
+  test("formatOutput", () => {});
 });

@@ -93,7 +93,7 @@ Event.prototype.availabilities = function(fromDate, toDate, customerRange) {
     }
     ///////////////////////////////////////////////////////////
   }
-  availableRanges = subtractRanges(openingRangesInCustomerRange, busyRanges);
+  availableRanges = substractRanges(openingRangesInCustomerRange, busyRanges);
   const availableRangesSorted = availableRanges.sort(
     (a, b) => a.start - b.start
   );
@@ -150,7 +150,13 @@ const nth = d => {
   }
 };
 
-const subtractRanges = (sourceRange, otherRanges) => {
+const substractRanges = (sourceRange, otherRanges) => {
+  if (!Array.isArray(sourceRange)) {
+    sourceRange = [sourceRange];
+  }
+  if (!Array.isArray(otherRanges)) {
+    otherRanges = [otherRanges];
+  }
   return flatten(
     sourceRange.map(s => {
       return flatten(otherRanges).reduce(
@@ -163,4 +169,4 @@ const subtractRanges = (sourceRange, otherRanges) => {
   );
 };
 
-module.exports = { Event, eventList, eventValidator, nth };
+module.exports = { Event, eventList, eventValidator, nth, substractRanges };
