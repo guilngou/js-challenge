@@ -98,7 +98,8 @@ Event.prototype.availabilities = function(fromDate, toDate, customerRange) {
     (a, b) => a.start - b.start
   );
 
-  formatOutput(availableRangesSorted);
+  console.log(formatOutput(availableRangesSorted));
+  return formatOutput(availableRangesSorted);
 };
 
 const formatOutput = rangesToOutput => {
@@ -132,8 +133,7 @@ const formatOutput = rangesToOutput => {
   }
   output = output.substring(0, output.length - 2);
   output += "\nI'm not available any other time !";
-  //console.log("output :");
-  //console.log(output);
+  return output;
 };
 
 const nth = d => {
@@ -169,4 +169,11 @@ const substractRanges = (sourceRange, otherRanges) => {
   );
 };
 
-module.exports = { Event, eventList, eventValidator, nth, substractRanges };
+module.exports = {
+  Event,
+  eventList,
+  eventValidator,
+  nth,
+  substractRanges,
+  formatOutput
+};
