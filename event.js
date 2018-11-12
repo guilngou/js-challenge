@@ -38,25 +38,23 @@ const Event = function(opening, recurring, startDate, endDate, range) {
 const eventValidator = event => {
   let isValid = true;
   let messageError = "";
-  messageError += `Event n°${event.eventId}: `;
   if (!(typeof event.opening === "boolean")) {
     messageError += "Opening is not valid. ";
-    isValid = false;
   }
   if (!(typeof event.recurring === "boolean")) {
     messageError += "Recurring is not valid. ";
-    isValid = false;
   }
   if (!event.startDate.isValid()) {
     messageError += "Start date is not valid. ";
-    isValid = false;
   }
   if (!event.endDate.isValid()) {
     messageError += "End date is not valid. ";
-    isValid = false;
   }
   if (!moment.isRange(event.range)) {
     messageError += "Range is not valid. ";
+  }
+  if (!(messageError.length == 0)) {
+    messageError += `(event n°${event.eventId}) `;
     isValid = false;
   }
   if (!isValid) {
