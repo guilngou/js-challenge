@@ -24,7 +24,7 @@ const Event = function(opening, recurring, startDate, endDate, range) {
   this.range = range;
   this.eventId = ++eventId;
 
-  if (!eventValidator(this)) {
+  if (eventValidator(this)) {
     // when an event is created and valid, push it to the class variable
     eventList.push(this);
     if (opening) {
@@ -36,33 +36,33 @@ const Event = function(opening, recurring, startDate, endDate, range) {
 };
 
 const eventValidator = event => {
-  let error = false;
+  let isValid = true;
   let messageError = "";
   messageError += `Event n°${event.eventId}: `;
   if (!(typeof event.opening === "boolean")) {
     messageError += "Opening is not valid. ";
-    error = true;
+    isValid = false;
   }
   if (!(typeof event.recurring === "boolean")) {
     messageError += "Recurring is not valid. ";
-    error = true;
+    isValid = false;
   }
   if (!event.startDate.isValid()) {
     messageError += "Start date is not valid. ";
-    error = true;
+    isValid = false;
   }
   if (!event.endDate.isValid()) {
     messageError += "End date is not valid. ";
-    error = true;
+    isValid = false;
   }
   if (!moment.isRange(event.range)) {
     messageError += "Range is not valid. ";
-    error = true;
+    isValid = false;
   }
-  if (error) {
+  if (!isValid) {
     console.error(messageError);
   }
-  return error;
+  return isValid;
 };
 
 // This method should return the availabilities of the company
