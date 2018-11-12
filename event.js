@@ -24,7 +24,7 @@ const Event = function(opening, recurring, startDate, endDate, range) {
   this.range = range;
   this.eventId = ++eventId;
 
-  if (eventValidator(this)) {
+  if (eventValidator(this).bool) {
     // when an event is created and valid, push it to the class variable
     eventList.push(this);
     if (opening) {
@@ -36,29 +36,33 @@ const Event = function(opening, recurring, startDate, endDate, range) {
 };
 
 const eventValidator = event => {
-  let isValid = true;
-  let messageError = "";
+  const isValid = { bool: true, messageError: "" };
   if (!(typeof event.opening === "boolean")) {
-    messageError += "Opening is not valid. ";
+    isValid.messageError += "Opening is not valid. ";
   }
   if (!(typeof event.recurring === "boolean")) {
-    messageError += "Recurring is not valid. ";
+    isValid.messageError += "Recurring is not valid. ";
+  }
+  if (
+    typeof event.opening === "boolean" &&
+    typeof event.recurring === "boolean"
+  ) {
+    if (!event.opening && event.recurring) {
+      isValid.messageError += "A busy event can not be recurring. ";
+    }
   }
   if (!event.startDate.isValid()) {
-    messageError += "Start date is not valid. ";
+    isValid.messageError += "Start date is not valid. ";
   }
   if (!event.endDate.isValid()) {
-    messageError += "End date is not valid. ";
+    isValid.messageError += "End date is not valid. ";
   }
   if (!moment.isRange(event.range)) {
-    messageError += "Range is not valid. ";
+    isValid.messageError += "Range is not valid. ";
   }
-  if (!(messageError.length == 0)) {
-    messageError += `(event n°${event.eventId}) `;
-    isValid = false;
-  }
-  if (!isValid) {
-    console.error(messageError);
+  if (!(isValid.messageError.length == 0)) {
+    isValid.messageError += `(event n°${event.eventId}) `;
+    isValid.bool = false;
   }
   return isValid;
 };
@@ -128,8 +132,8 @@ const formatOutput = rangesToOutput => {
   }
   output = output.substring(0, output.length - 2);
   output += "\nI'm not available any other time !";
-  console.log("output :");
-  console.log(output);
+  //console.log("output :");
+  //console.log(output);
 };
 
 const nth = d => {
@@ -161,4 +165,4 @@ const subtractRanges = (sourceRange, otherRanges) => {
 
 const simpleSum = (a, b) => a + b;
 
-module.exports = { simpleSum, Event, eventList };
+module.exports = { simpleSum, Event, eventList, eventValidator, nth };
