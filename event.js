@@ -163,6 +163,4 @@ const subtractRanges = (sourceRange, otherRanges) => {
   );
 };
 
-const simpleSum = (a, b) => a + b;
-
-module.exports = { simpleSum, Event, eventList, eventValidator, nth };
+module.exports = { Event, eventList, eventValidator, nth };
