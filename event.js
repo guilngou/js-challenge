@@ -14,6 +14,7 @@ const eventList = [];
 const openingEventList = [];
 const busyRanges = [];
 let availableRanges = [];
+let eventId = 0;
 
 const Event = function(opening, recurring, startDate, endDate, range) {
   this.opening = opening;
@@ -21,18 +22,47 @@ const Event = function(opening, recurring, startDate, endDate, range) {
   this.startDate = startDate;
   this.endDate = endDate;
   this.range = range;
+  this.eventId = ++eventId;
 
-  //TODO : check event is valid
-  //TODO : check date is valid
-
-  // when an event is created, push it to the class variable
-  eventList.push(this);
-
-  if (opening) {
-    openingEventList.push(this);
-  } else {
-    busyRanges.push(range);
+  if (!eventValidator(this)) {
+    // when an event is created and valid, push it to the class variable
+    eventList.push(this);
+    if (opening) {
+      openingEventList.push(this);
+    } else {
+      busyRanges.push(range);
+    }
   }
+};
+
+const eventValidator = event => {
+  let error = false;
+  let messageError = "";
+  messageError += `Event n°${event.eventId}: `;
+  if (!(typeof event.opening === "boolean")) {
+    messageError += "Opening is not valid. ";
+    error = true;
+  }
+  if (!(typeof event.recurring === "boolean")) {
+    messageError += "Recurring is not valid. ";
+    error = true;
+  }
+  if (!event.startDate.isValid()) {
+    messageError += "Start date is not valid. ";
+    error = true;
+  }
+  if (!event.endDate.isValid()) {
+    messageError += "End date is not valid. ";
+    error = true;
+  }
+  if (!moment.isRange(event.range)) {
+    messageError += "Range is not valid. ";
+    error = true;
+  }
+  if (error) {
+    console.error(messageError);
+  }
+  return error;
 };
 
 // This method should return the availabilities of the company
@@ -61,48 +91,45 @@ Event.prototype.availabilities = function(fromDate, toDate, customerRange) {
     }
     ///////////////////////////////////////////////////////////
   }
-  //console.log("openingRangesInCustomerRange : ");
-  //console.log(openingRangesInCustomerRange);
-  //console.log("availableRanges : ");
   availableRanges = subtractRanges(openingRangesInCustomerRange, busyRanges);
-  //console.log(availableRanges);
-
   const availableRangesSorted = availableRanges.sort(
     (a, b) => a.start - b.start
   );
-  //console.log(availableRangesSorted);
 
+  formatOutput(availableRangesSorted);
+};
+
+const formatOutput = rangesToOutput => {
   let output = "";
   const startDate = moment(new Date(2000, 1, 1, 0, 0));
   const endDate = moment(new Date(2000, 1, 1, 0, 30));
   const thirtyMinutesRange = moment.range(startDate, endDate);
   let currentDate = moment("2000-01-01");
-  for (const range of availableRangesSorted) {
+  for (const range of rangesToOutput) {
     const slots = Array.from(
       range.byRange(thirtyMinutesRange, { excludeEnd: true })
     );
-    //console.log(range);
-    slots.map(m => {
-      if (!currentDate.isSame(m, "day")) {
-        const day = nth(parseInt(m.format("D")));
-        currentDate = m;
+    for (const slot of slots) {
+      if (!currentDate.isSame(slot, "day")) {
+        const day = nth(parseInt(slot.format("D")));
+        currentDate = slot;
         if (!!output) {
           output = output.substring(0, output.length - 2);
-          output += `\nI'm available on ${m.format(
+          output += `\nI'm available on ${slot.format(
             "MMMM D"
-          )}${day}, at ${m.format("HH:mm")}, `;
+          )}${day}, at ${slot.format("HH:mm")}, `;
         } else {
-          output += `I'm available on ${m.format(
+          output += `I'm available on ${slot.format(
             "MMMM D"
-          )}${day}, at ${m.format("HH:mm")}, `;
+          )}${day}, at ${slot.format("HH:mm")}, `;
         }
       } else {
-        output += m.format("HH:mm") + ", ";
+        output += `${slot.format("HH:mm")}, `;
       }
-    });
+    }
   }
   output = output.substring(0, output.length - 2);
-  output += "\nI'm not available any other time ! ";
+  output += "\nI'm not available any other time !";
   console.log("output :");
   console.log(output);
 };
